@@ -106,24 +106,24 @@ Berikut adalah bukti tangkapan layar pengujian berhasil di Postman:
 
 ![Bukti Pengujian Postman 200 OK](../images/Buktihasil%20Tes%20Gempa%20200%20OK.png)
 
-### Kondisi Gagal (400 Bad Request)
+### Kondisi Gagal (404 Not Found)
 
-- **Request**: `GET https://data.bmkg.go.id/DataMKG/TEWS/%` (menggunakan sintaks URL tidak valid / karakter terlarang)
-- **Status Code**: `400 Bad Request`
+- **Request**: `GET https://data.bmkg.go.id/DataMKG/TEWS/gempa-tidak-ada.json` (meminta berkas yang tidak tersedia di server)
+- **Status Code**: `404 Not Found`
 - **Header**: `Content-Type: text/html`
-- **Hasil**: Web server menolak permintaan karena format URL tidak valid dan mengembalikan respon HTML:
+- **Hasil**: Server mengembalikan respon `404 Not Found` karena alamat berkas yang diminta tidak ditemukan di server:
 
 ```html
-<h2>Bad Request - Invalid URL</h2>
-<p>HTTP Error 400. The request URL is invalid.</p>
+<h2>404 - File or directory not found.</h2>
+<p>The resource you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
 ```
 
 Berikut adalah bukti tangkapan layar pengujian respon gagal di Postman:
 
-![Bukti Pengujian Postman 400 Bad Request](../images/Buktihasil%20Tes%20Gempa%20400%20Not%20Respones.png)
+![Bukti Pengujian Postman 404 Not Found](../images/Buktihasil%20Tes%20Gempa%20404%20Not%20Found.png)
 
 ### Analisis Perbedaan:
-1. **Status Code**: Respon berhasil mengembalikan status `200 OK`, sedangkan URL dengan sintaks rusak menghasilkan error `400 Bad Request`.
+1. **Status Code**: Respon berhasil mengembalikan status `200 OK`, sedangkan ketika berkas tidak ditemukan server mengembalikan status error `404 Not Found`.
 2. **Format Response**: Respon berhasil berupa berkas terstruktur `application/json`, sedangkan respon gagal berupa halaman dokumen `text/html`.
 3. **Pentingnya Validasi Client**: Client wajib melakukan pengecekan HTTP Status Code sebelum memproses body data agar sistem tidak mengalami kegagalan (*error parsing*) saat menerima dokumen HTML dari server.
 
