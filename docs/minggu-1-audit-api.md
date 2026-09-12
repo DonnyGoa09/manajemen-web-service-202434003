@@ -1,11 +1,4 @@
-# Tugas 1 - Audit API dan Ide Proyek Semester
-
-## Identitas Mahasiswa
-
-- Nama: Dominikus Savio Goa
-- NIM: 2024340035
-- Mata Kuliah: Manajemen Web Service
-- Tanggal: 12 September 2026
+# Tugas 1 - Audit API dan Ide Proyek
 
 ## 1. Identitas API
 
