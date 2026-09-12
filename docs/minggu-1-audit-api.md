@@ -100,73 +100,32 @@ Alur komunikasi sistem:
 - **Request**: `GET https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json`
 - **Status Code**: `200 OK`
 - **Header**: `Content-Type: application/json`
-- **Hasil**: Server berhasil menemukan sumber daya data dan mengirimkan struktur JSON gempa lengkap sesuai format spesifikasi BMKG.
+- **Hasil**: Server berhasil menemukan data dan mengembalikan data JSON terstruktur mengenai gempa bumi terkini.
 
-### Kondisi Gagal
+Berikut adalah bukti tangkapan layar pengujian berhasil di Postman:
 
-Pengujian kondisi gagal dilakukan dengan dua skenario: kesalahan penulisan alamat sumber daya (*404 Not Found*) dan kesalahan sintaks/karakter pada URL (*400 Bad Request*).
+![Bukti Pengujian Postman 200 OK](../images/Buktihasil%20Tes%20Gempa%20200%20OK.png)
 
-#### 1. Kasus Berkas Tidak Ditemukan (404 Not Found)
+### Kondisi Gagal (400 Bad Request)
 
-Ketika client meminta resource berkas yang tidak tersedia di server:
-
-```text
-GET https://data.bmkg.go.id/DataMKG/TEWS/gempa-tidak-ada.json
-```
-
-- **Status Code**: `404 Not Found`
-- **Header**: `Content-Type: text/html`
-- **Response Body**:
-
-```html
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
-  <title>404 - File or directory not found.</title>
-</head>
-<body>
-  <div id="header"><h1>Server Error</h1></div>
-  <div id="content">
-    <div class="content-container">
-      <fieldset>
-        <h2>404 - File or directory not found.</h2>
-        <h3>The resource you are looking for might have been removed, had its name changed, or is temporarily unavailable.</h3>
-      </fieldset>
-    </div>
-  </div>
-</body>
-</html>
-```
-
-#### 2. Kasus Sintaks URL Tidak Valid (400 Bad Request)
-
-Ketika client mengirimkan request dengan URL yang mengandung karakter terlarang atau format yang tidak valid (misalnya karakter liar, spasi tidak ter-encode, atau tanda khusus seperti `%` tanpa kode heksadesimal):
-
-```text
-GET https://data.bmkg.go.id/DataMKG/TEWS/%
-```
-
+- **Request**: `GET https://data.bmkg.go.id/DataMKG/TEWS/%` (menggunakan sintaks URL tidak valid / karakter terlarang)
 - **Status Code**: `400 Bad Request`
-- **Header**: `Content-Type: text/html; charset=us-ascii`
-- **Response Body**:
+- **Header**: `Content-Type: text/html`
+- **Hasil**: Web server menolak permintaan karena format URL tidak valid dan mengembalikan respon HTML:
 
 ```html
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">
-<HTML><HEAD><TITLE>Bad Request</TITLE>
-<META HTTP-EQUIV="Content-Type" Content="text/html; charset=us-ascii"></HEAD>
-<BODY><h2>Bad Request - Invalid URL</h2>
-<hr><p>HTTP Error 400. The request URL is invalid.</p>
-</BODY></HTML>
+<h2>Bad Request - Invalid URL</h2>
+<p>HTTP Error 400. The request URL is invalid.</p>
 ```
+
+Berikut adalah bukti tangkapan layar pengujian respon gagal di Postman:
+
+![Bukti Pengujian Postman 400 Bad Request](../images/Buktihasil%20Tes%20Gempa%20400%20Not%20Respones.png)
 
 ### Analisis Perbedaan:
-1. **Status Code**: 
-   - Pada kondisi berhasil, server mengembalikan status `200 OK`.
-   - Pada URL berkas yang tidak ada, server mengembalikan status `404 Not Found`.
-   - Pada URL dengan format/sintaks yang rusak, web server mengembalikan status `400 Bad Request`.
-2. **Format Response**: Saat berhasil, server mengirimkan berkas data terstruktur `application/json` yang siap diolah oleh aplikasi. Sedangkan pada kondisi gagal (`400` maupun `404`), server BMKG mengembalikan dokumen `text/html` berisi pemberitahuan kesalahan server.
-3. **Pentingnya Penanganan Error pada Client**: Client wajib melakukan validasi HTTP Status Code terlebih dahulu sebelum melakukan *parsing* JSON agar aplikasi tidak mengalami *crash* saat menerima response error HTML dari server.
+1. **Status Code**: Respon berhasil mengembalikan status `200 OK`, sedangkan URL dengan sintaks rusak menghasilkan error `400 Bad Request`.
+2. **Format Response**: Respon berhasil berupa berkas terstruktur `application/json`, sedangkan respon gagal berupa halaman dokumen `text/html`.
+3. **Pentingnya Validasi Client**: Client wajib melakukan pengecekan HTTP Status Code sebelum memproses body data agar sistem tidak mengalami kegagalan (*error parsing*) saat menerima dokumen HTML dari server.
 
 ## 6. Ide Proyek Semester
 
