@@ -56,12 +56,12 @@ Field `login` menunjukkan username pengguna. Field `id` merupakan identitas unik
 
 ```mermaid
 flowchart LR
-    A["Postman sebagai client"] -->|"GET /users/octocat"| B["GitHub REST API"]
-    B --> C["Service GitHub"]
-    C --> D["Data pengguna"]
-    D --> C
-    C --> B
-    B -->|"Status, header, dan JSON"| A
+    A[Postman sebagai client] -->|GET /users/octocat| B[GitHub REST API]
+    B --> C[Service GitHub]
+    C --> D[Data pengguna]
+    D -.-> C
+    C -.-> B
+    B -.->|Status, header, dan JSON| A
 ```
 
 Postman bertindak sebagai client yang mengirim request ke GitHub REST API. API meneruskan permintaan agar service GitHub mencari data pengguna. Hasil pencarian kemudian dikirim kembali melalui API dalam bentuk status code, header, dan body JSON. Peta ini merupakan gambaran sederhana karena proses internal GitHub tidak dapat dilihat secara langsung melalui Postman.
