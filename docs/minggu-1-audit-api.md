@@ -140,6 +140,4 @@ API akan dibuat sebagai REST API berbasis Laravel. Data disimpan dalam database 
 
 ## 8. Deklarasi Penggunaan AI
 
-Saya menggunakan bantuan AI untuk membantu menyusun kerangka dokumen, merapikan bahasa, dan memberi masukan terhadap ide proyek. Pengujian endpoint dilakukan melalui Postman, kemudian hasil request dan response saya periksa kembali. Saya membaca dan memeriksa isi akhir dokumen sebelum dikumpulkan.
-
-Dokumen ini tidak memuat API key, token, password, cookie, atau secret.
+Saya menggunakan AI hanya sebagai alat bantu untuk memberikan panduan pada setiap langkah pengerjaan dan menjelaskan mengenai API yang digunakan. AI juga membantu merapikan susunan tulisan dan kerangka penjelasan agar lebih jelas. Ide proyek berasal dari pemikiran saya sendiri, sedangkan AI hanya membantu mengembangkan dan merapikannya. Pengujian endpoint tetap saya lakukan sendiri menggunakan Postman, kemudian hasil request dan response saya periksa kembali sebelum dokumen dikumpulkan.
