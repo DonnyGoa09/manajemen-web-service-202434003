@@ -109,12 +109,16 @@ Alur komunikasi sistem:
 - **Header**: `Content-Type: application/json`
 - **Hasil**: Server berhasil menemukan sumber daya data dan mengirimkan struktur JSON gempa lengkap sesuai format spesifikasi BMKG.
 
-### Kondisi Gagal (404 Not Found)
+### Kondisi Gagal
 
-Untuk menguji bagaimana API menangani kesalahan ketika client meminta resource yang tidak tersedia, URL diubah menjadi endpoint berkas yang tidak ada:
+Pengujian kondisi gagal dilakukan dengan dua skenario: kesalahan penulisan alamat sumber daya (*404 Not Found*) dan kesalahan sintaks/karakter pada URL (*400 Bad Request*).
+
+#### 1. Kasus Berkas Tidak Ditemukan (404 Not Found)
+
+Ketika client meminta resource berkas yang tidak tersedia di server:
 
 ```text
-https://data.bmkg.go.id/DataMKG/TEWS/gempa-tidak-ada.json
+GET https://data.bmkg.go.id/DataMKG/TEWS/gempa-tidak-ada.json
 ```
 
 - **Status Code**: `404 Not Found`
@@ -142,59 +146,88 @@ https://data.bmkg.go.id/DataMKG/TEWS/gempa-tidak-ada.json
 </html>
 ```
 
+#### 2. Kasus Sintaks URL Tidak Valid (400 Bad Request)
+
+Ketika client mengirimkan request dengan URL yang mengandung karakter terlarang atau format yang tidak valid (misalnya karakter liar, spasi tidak ter-encode, atau tanda khusus seperti `%` tanpa kode heksadesimal):
+
+```text
+GET https://data.bmkg.go.id/DataMKG/TEWS/%
+```
+
+- **Status Code**: `400 Bad Request`
+- **Header**: `Content-Type: text/html; charset=us-ascii`
+- **Response Body**:
+
+```html
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">
+<HTML><HEAD><TITLE>Bad Request</TITLE>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=us-ascii"></HEAD>
+<BODY><h2>Bad Request - Invalid URL</h2>
+<hr><p>HTTP Error 400. The request URL is invalid.</p>
+</BODY></HTML>
+```
+
 ### Analisis Perbedaan:
-1. **Status Code**: Pada kondisi berhasil status bernilai `200 OK`, sedangkan pada kesalahan URL server mengembalikan status `404 Not Found`.
-2. **Format Response**: Saat berhasil, server mengirimkan format data `application/json` yang siap diparsing program. Saat gagal `404`, server BMKG mengembalikan dokumen `text/html` berisi pesan *"404 - File or directory not found"*.
-3. **Pentingnya Pengecekan Status Code**: Hal ini menunjukkan bahwa aplikasi client tidak boleh langsung mengasumsikan response berformat JSON sebelum memverifikasi bahwa HTTP status code bernilai `200`.
+1. **Status Code**: 
+   - Pada kondisi berhasil, server mengembalikan status `200 OK`.
+   - Pada URL berkas yang tidak ada, server mengembalikan status `404 Not Found`.
+   - Pada URL dengan format/sintaks yang rusak, web server mengembalikan status `400 Bad Request`.
+2. **Format Response**: Saat berhasil, server mengirimkan berkas data terstruktur `application/json` yang siap diolah oleh aplikasi. Sedangkan pada kondisi gagal (`400` maupun `404`), server BMKG mengembalikan dokumen `text/html` berisi pemberitahuan kesalahan server.
+3. **Pentingnya Penanganan Error pada Client**: Client wajib melakukan validasi HTTP Status Code terlebih dahulu sebelum melakukan *parsing* JSON agar aplikasi tidak mengalami *crash* saat menerima response error HTML dari server.
 
 ## 6. Ide Proyek Semester
 
 ### Nama proyek
 
-API Pelaporan Kerusakan Fasilitas Kampus
+**Game Deals & Free Games Aggregator API (GameHunter API)**
 
 ### Masalah yang ingin diselesaikan
 
-Mahasiswa dan staf kampus sering menemukan fasilitas fisik atau sarana penunjang yang mengalami kerusakan, seperti kursi kelas patah, proyektor mati, pendingin ruangan (AC) bocor, komputer laboratorium rusak, atau akses WiFi bermasalah. Apabila pelaporan hanya dilakukan secara lisan atau melalui obrolan perpesanan biasa, laporan rentan terlewat, penanganan lambat, dan proses perbaikan sulit dipantau.
+Banyak penggemar game dan mahasiswa ingin memainkan game PC original berkualitas di platform resmi (seperti Steam, Epic Games Store, dan GOG), namun sering terkendala harga yang mahal atau terlambat mengetahui informasi promosi *giveaway* game gratis berbatas waktu. Selain itu, mencari perbandingan diskon harga game termurah antar-toko digital secara manual memerlukan waktu dan sering kali melelahkan.
+
+Proyek ini bertujuan membangun sebuah Web Service / REST API perantara (*aggregator*) yang secara otomatis mengambil data promosi game gratis dan diskon harga dari API publik eksternal (**CheapShark API** dan **FreeToGame API**). Data tersebut kemudian diolah, disimpan ke dalam database lokal, dan disajikan kembali melalui REST API dengan fitur personalisasi untuk pengguna, seperti daftar impian (*wishlist*), peringatan harga turun (*price alert*), serta kurasi game yang ramah spesifikasi laptop mahasiswa (*PC Kentang*).
 
 ### Pengguna
 
-- **Mahasiswa dan Staf (Pelapor)**: Membuat tiket laporan kerusakan, mengunggah foto bukti, serta memantau status tindak lanjut.
-- **Petugas Sarana & Prasarana / Teknisi**: Menerima tugas perbaikan, memperbarui status pengerjaan, dan mencatat penyelesaian.
-- **Admin Sarpras**: Mengelola data kategori kerusakan, lokasi gedung/ruangan, menugaskan teknisi, dan melihat statistik perbaikan fasilitas.
+- **Mahasiswa & Gamers**: Mencari informasi game gratis yang sedang aktif, memantau diskon game impian (*wishlist*), mengatur peringatan harga batas bawah (*price alert*), serta membaca dan membagikan ulasan performa game pada laptop spesifikasi standar.
+- **Admin Sistem**: Mengelola kategori kurasi game, memantau sinkronisasi berkala dari API luar, dan memoderasi ulasan komunitas.
 
 ### Resource awal
 
-- `users`: Menyimpan data autentikasi dan profil pengguna kampus.
-- `reports`: Menyimpan tiket laporan kerusakan yang dikirimkan pelapor.
-- `categories`: Menyimpan jenis fasilitas (misal: Elektronik, Mebel, Jaringan, Kebersihan).
-- `locations`: Menyimpan lokasi fasilitas (nama gedung, lantai, nomor ruangan).
-- `report_statuses`: Mencatat riwayat perkembangan penanganan laporan (*log progress*).
+- `users`: Menyimpan data akun, kredensial autentikasi, dan profil pengguna.
+- `wishlists`: Menyimpan daftar game impian yang ditandai oleh pengguna.
+- `price_alerts`: Menyimpan preferensi target harga (misalnya: beri tanda notifikasi jika harga game turun di bawah Rp 100.000 atau diskon di atas 70%).
+- `game_reviews`: Menyimpan ulasan komunitas, rating bintang, dan informasi apakah game tersebut lancar dimainkan di laptop spesifikasi standar mahasiswa.
+- `free_games`: Menyimpan katalog game gratis dan penawaran *giveaway* yang disinkronkan dari API eksternal.
 
 ### Contoh endpoint awal
 
 | Method | Endpoint | Fungsi |
 | --- | --- | --- |
-| POST | `/api/reports` | Membuat tiket laporan kerusakan baru. |
-| GET | `/api/reports` | Mengambil daftar seluruh laporan kerusakan (dengan fitur filter lokasi/status). |
-| GET | `/api/reports/{id}` | Mengambil detail lengkap dari satu laporan kerusakan tertentu. |
-| PATCH | `/api/reports/{id}/status` | Memperbarui status penanganan (misal: dari `dilaporkan` -> `diproses` -> `selesai`). |
-| DELETE | `/api/reports/{id}` | Menghapus data laporan (hanya dapat diakses oleh Admin atau jika laporan dibatalkan). |
+| GET | `/api/games/free` | Mengambil daftar game PC yang sedang gratis atau promo *giveaway* aktif. |
+| GET | `/api/games/deals` | Mengambil daftar promo diskon game terbaik (dapat difilter berdasarkan harga & platform toko). |
+| POST | `/api/wishlist` | Menambahkan game incaran ke daftar *wishlist* pengguna. |
+| GET | `/api/wishlist` | Melihat daftar game impian milik pengguna beserta status diskon terbarunya. |
+| POST | `/api/alerts` | Mendaftarkan aturan notifikasi target harga (*price alert*) untuk game tertentu. |
+| POST | `/api/reviews` | Mengirimkan ulasan dan rekomendasi game untuk komunitas. |
+| DELETE | `/api/wishlist/{id}` | Menghapus game dari daftar *wishlist*. |
 
 ### Batas awal proyek
 
-- **Ruang Lingkup**: Versi awal difokuskan pada manajemen siklus hidup laporan kerusakan (CRUD tiket laporan, penentuan kategori & lokasi, serta pembaruan status perbaikan menjadi `dilaporkan`, `diproses`, atau `selesai`).
-- **Batasan**: Fitur obrolan langsung (*live chat*), notifikasi real-time via WebSocket, dan integrasi absensi kampus belum dimasukkan agar ruang lingkup pengerjaan realistis diselesaikan dalam rentang satu semester.
-- **Teknologi**: API akan dibangun sebagai REST API menggunakan framework **Laravel**, database relasional **MySQL**, dengan komunikasi data client-server berbasis **JSON**.
+- **Ruang Lingkup**: Versi awal berfokus pada pengambilan data diskon dan game gratis dari API eksternal, manajemen data akun pengguna, pengelolaan *wishlist* dan *price alert*, serta sistem ulasan komunitas.
+- **Batasan**: Transaksi pembayaran langsung di dalam sistem ditiadakan (aplikasi hanya mengarahkan tautan langsung ke etalase resmi toko seperti Steam atau Epic Games Store), dan fitur obrolan langsung (*live chat*) antarpengguna belum dimasukkan agar ruang lingkup pengerjaan realistis diselesaikan dalam rentang satu semester.
+- **Teknologi**: API akan dibangun sebagai REST API menggunakan framework **Laravel**, basis data relasional **MySQL**, pengujian fungsional menggunakan **Postman**, dan integrasi data eksternal memanfaatkan HTTP Client Laravel.
 
 ## 7. Referensi Resmi
 
 1. **Portal Data Terbuka BMKG**: [https://data.bmkg.go.id/](https://data.bmkg.go.id/)
 2. **Dokumentasi Gempabumi BMKG**: [https://data.bmkg.go.id/gempabumi/](https://data.bmkg.go.id/gempabumi/)
-3. **Hasil Pengujian Mandiri**: Pengujian endpoint API secara langsung menggunakan Postman pada tanggal 12 September 2026.
+3. **CheapShark API Documentation**: [https://apidocs.cheapshark.com/](https://apidocs.cheapshark.com/)
+4. **FreeToGame API Documentation**: [https://www.freetogame.com/api-doc](https://www.freetogame.com/api-doc)
+5. **Hasil Pengujian Mandiri**: Pengujian endpoint API secara langsung menggunakan Postman pada tanggal 12 September 2026.
 
 ## 8. Deklarasi Penggunaan AI
 
 Saya menggunakan alat bantu AI sebagai asisten belajar dan panduan teknis selama proses pengerjaan tugas ini. Bantuan AI dimanfaatkan untuk mengeksplorasi pilihan API publik yang relevan, membantu merapikan struktur penulisan laporan akademik, menyusun format tabel, serta merapikan diagram arsitektur sistem menggunakan Mermaid syntax.
 
-Pengujian endpoint API dilakukan secara mandiri menggunakan aplikasi Postman pada endpoint resmi BMKG. Data request, response JSON, serta analisis kondisi error 404 diperiksa dan diverifikasi secara langsung dari hasil eksekusi nyata. Ide proyek semester mengenai sistem pelaporan fasilitas kampus dirumuskan secara mandiri berdasarkan permasalahan nyata yang ditemui di lingkungan kampus.
+Pengujian endpoint API dilakukan secara mandiri menggunakan aplikasi Postman pada endpoint resmi BMKG. Data request, response JSON, serta analisis kondisi error diperiksa dan diverifikasi secara langsung dari hasil eksekusi nyata. Ide proyek semester mengenai sistem agregator game gratis dan pelacak diskon PC (GameHunter API) dirumuskan berdasarkan minat dan kebutuhan mahasiswa dalam mengoptimalkan anggaran hiburan digital secara hemat dan legal.
