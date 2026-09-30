@@ -1,0 +1,23 @@
+PENJELASAN TUGAS 3
+
+Proyek saya adalah GameHunter, layanan untuk mencari game gratis dan diskon.
+Pada Minggu 3 saya menentukan contract terlebih dahulu. Contract adalah kesepakatan URL, method, field, tipe data, dan status response.
+
+Saya fokus ke resource games. GET /api/games untuk daftar, GET /api/games/1 untuk detail. Filter platform hanya menerima pc atau browser.
+200 berarti berhasil. 404 berarti resource tidak ditemukan. 422 berarti parameter tidak valid.
+Response sukses memakai data. Response error memakai message dan errors.
+
+Mock adalah server contoh untuk mencoba contract. Data di dalamnya adalah fixture, bukan data live. Backend Laravel dan database belum dibuat karena materi menempatkannya pada Minggu 4.
+
+Cara mencoba:
+1. Buka terminal pada folder Tugas 3 — Draft API Contract.
+2. Jalankan node docs/mock-server.cjs.
+3. Import docs/GameHunter.postman_collection.json ke Postman.
+4. Jalankan request atau Run collection. Lihat status, body, dan hasil tests.
+
+Untuk GitHub, salin seluruh folder tugas ke root repository. Pertahankan docs dan images agar link gambar tidak rusak.
+Laporan ada di docs/minggu-3.md. Jangan unggah credential atau file environment pribadi.
+Message commit: docs: tambah draft contract GameHunter dan bukti pengujian minggu 3.
+
+Saat dosen bertanya, jelaskan bahwa resource adalah konsep yang dilihat client. Nama games berupa kata benda jamak. is_free boolean agar tipenya jelas. updated_at memakai ISO 8601 agar mudah dibaca komputer.
+FreeToGame menyediakan free-to-play, bukan bukti giveaway berbatas waktu.
