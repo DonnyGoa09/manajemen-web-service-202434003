@@ -1,0 +1,161 @@
+{
+  "tool": "Newman",
+  "stats": {
+    "iterations": {
+      "total": 1,
+      "pending": 0,
+      "failed": 0
+    },
+    "items": {
+      "total": 6,
+      "pending": 0,
+      "failed": 0
+    },
+    "scripts": {
+      "total": 6,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequests": {
+      "total": 6,
+      "pending": 0,
+      "failed": 0
+    },
+    "requests": {
+      "total": 6,
+      "pending": 0,
+      "failed": 0
+    },
+    "tests": {
+      "total": 6,
+      "pending": 0,
+      "failed": 0
+    },
+    "assertions": {
+      "total": 18,
+      "pending": 0,
+      "failed": 0
+    },
+    "testScripts": {
+      "total": 6,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequestScripts": {
+      "total": 0,
+      "pending": 0,
+      "failed": 0
+    }
+  },
+  "failures": [],
+  "executions": [
+    {
+      "name": "Daftar game",
+      "status": 200,
+      "assertions": [
+        {
+          "assertion": "Status 200",
+          "passed": true
+        },
+        {
+          "assertion": "JSON",
+          "passed": true
+        },
+        {
+          "assertion": "Data sesuai contract",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "Detail game",
+      "status": 200,
+      "assertions": [
+        {
+          "assertion": "Status 200",
+          "passed": true
+        },
+        {
+          "assertion": "JSON",
+          "passed": true
+        },
+        {
+          "assertion": "Data sesuai contract",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "Filter PC",
+      "status": 200,
+      "assertions": [
+        {
+          "assertion": "Status 200",
+          "passed": true
+        },
+        {
+          "assertion": "JSON",
+          "passed": true
+        },
+        {
+          "assertion": "Data sesuai contract",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "Filter kosong",
+      "status": 200,
+      "assertions": [
+        {
+          "assertion": "Status 200",
+          "passed": true
+        },
+        {
+          "assertion": "JSON",
+          "passed": true
+        },
+        {
+          "assertion": "Data sesuai contract",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "Game tidak ada",
+      "status": 404,
+      "assertions": [
+        {
+          "assertion": "Status 404",
+          "passed": true
+        },
+        {
+          "assertion": "JSON",
+          "passed": true
+        },
+        {
+          "assertion": "Error sesuai contract",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "Platform salah",
+      "status": 422,
+      "assertions": [
+        {
+          "assertion": "Status 422",
+          "passed": true
+        },
+        {
+          "assertion": "JSON",
+          "passed": true
+        },
+        {
+          "assertion": "Error sesuai contract",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}
