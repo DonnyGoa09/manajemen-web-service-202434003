@@ -1,0 +1,274 @@
+{
+  "info": {
+    "name": "Minggu 4 - GameHunter Laravel",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "noauth"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "game_id",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "List Games",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200',()=>pm.response.to.have.status(200));",
+              "pm.test('JSON response',()=>pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+              "pm.test('Contract fields and types',()=>{const d=pm.response.json().data;const rows=Array.isArray(d)?d:[d];rows.forEach(g=>{pm.expect(Object.keys(g).sort()).to.eql(['id','title','platform','is_free','source','updated_at'].sort());pm.expect(g.id).to.be.a('number');pm.expect(g.title).to.be.a('string');pm.expect(g.is_free).to.be.a('boolean');pm.expect(g.platform).to.be.oneOf(['pc','browser']);pm.expect(g.source).to.be.a('string');pm.expect(g.updated_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T/);});});",
+              "pm.test('List array',()=>{const d=pm.response.json().data;pm.expect(d).to.be.an('array');if(d.length)pm.collectionVariables.set('game_id',d[0].id);});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 200",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games"
+          },
+          "code": 200,
+          "status": "OK",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"title\": \"Game Contoh PC\",\n      \"platform\": \"pc\",\n      \"is_free\": true,\n      \"source\": \"fixture\",\n      \"updated_at\": \"2026-10-09T08:22:09.000000Z\"\n    },\n    {\n      \"id\": 2,\n      \"title\": \"Game Contoh Browser\",\n      \"platform\": \"browser\",\n      \"is_free\": true,\n      \"source\": \"fixture\",\n      \"updated_at\": \"2026-10-09T08:22:09.000000Z\"\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Show Game",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games/{{game_id}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200',()=>pm.response.to.have.status(200));",
+              "pm.test('JSON response',()=>pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+              "pm.test('Contract fields and types',()=>{const d=pm.response.json().data;const rows=Array.isArray(d)?d:[d];rows.forEach(g=>{pm.expect(Object.keys(g).sort()).to.eql(['id','title','platform','is_free','source','updated_at'].sort());pm.expect(g.id).to.be.a('number');pm.expect(g.title).to.be.a('string');pm.expect(g.is_free).to.be.a('boolean');pm.expect(g.platform).to.be.oneOf(['pc','browser']);pm.expect(g.source).to.be.a('string');pm.expect(g.updated_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T/);});});",
+              "pm.test('Detail object',()=>pm.expect(pm.response.json().data).to.be.an('object'));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 200",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games/{{game_id}}"
+          },
+          "code": 200,
+          "status": "OK",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": {\n    \"id\": 1,\n    \"title\": \"Game Contoh PC\",\n    \"platform\": \"pc\",\n    \"is_free\": true,\n    \"source\": \"fixture\",\n    \"updated_at\": \"2026-10-09T08:22:09.000000Z\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Game Not Found",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 404',()=>pm.response.to.have.status(404));",
+              "pm.test('JSON response',()=>pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+              "pm.test('Error contract',()=>{const b=pm.response.json();pm.expect(b.message).to.eql(\"Resource not found\");pm.expect(b.errors).to.eql(null);});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 404",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games/999999"
+          },
+          "code": 404,
+          "status": "Not Found",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"message\": \"Resource not found\",\n  \"errors\": null\n}"
+        }
+      ]
+    },
+    {
+      "name": "Filter PC",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games?platform=pc"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200',()=>pm.response.to.have.status(200));",
+              "pm.test('JSON response',()=>pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+              "pm.test('Contract fields and types',()=>{const d=pm.response.json().data;const rows=Array.isArray(d)?d:[d];rows.forEach(g=>{pm.expect(Object.keys(g).sort()).to.eql(['id','title','platform','is_free','source','updated_at'].sort());pm.expect(g.id).to.be.a('number');pm.expect(g.title).to.be.a('string');pm.expect(g.is_free).to.be.a('boolean');pm.expect(g.platform).to.be.oneOf(['pc','browser']);pm.expect(g.source).to.be.a('string');pm.expect(g.updated_at).to.match(/^\\d{4}-\\d{2}-\\d{2}T/);});});",
+              "pm.test('PC only',()=>pm.response.json().data.forEach(g=>pm.expect(g.platform).to.eql('pc')));"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 200",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games?platform=pc"
+          },
+          "code": 200,
+          "status": "OK",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"title\": \"Game Contoh PC\",\n      \"platform\": \"pc\",\n      \"is_free\": true,\n      \"source\": \"fixture\",\n      \"updated_at\": \"2026-10-09T08:22:09.000000Z\"\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Invalid Platform",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/games?platform=console"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 422',()=>pm.response.to.have.status(422));",
+              "pm.test('JSON response',()=>pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+              "pm.test('Error contract',()=>{const b=pm.response.json();pm.expect(b.message).to.eql(\"The given data was invalid.\");pm.expect(b.errors).to.eql({\"platform\":[\"Gunakan platform pc atau browser; hanya parameter platform yang didukung.\"]});});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "Actual Laravel 422",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/games?platform=console"
+          },
+          "code": 422,
+          "status": "Unprocessable Content",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"platform\": [\n      \"Gunakan platform pc atau browser; hanya parameter platform yang didukung.\"\n    ]\n  }\n}"
+        }
+      ]
+    }
+  ]
+}
