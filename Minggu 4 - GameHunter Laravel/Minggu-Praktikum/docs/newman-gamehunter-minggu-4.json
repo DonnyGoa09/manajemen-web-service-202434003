@@ -1,0 +1,155 @@
+{
+  "tool": "Newman",
+  "stats": {
+    "iterations": {
+      "total": 1,
+      "pending": 0,
+      "failed": 0
+    },
+    "items": {
+      "total": 5,
+      "pending": 0,
+      "failed": 0
+    },
+    "scripts": {
+      "total": 5,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequests": {
+      "total": 5,
+      "pending": 0,
+      "failed": 0
+    },
+    "requests": {
+      "total": 5,
+      "pending": 0,
+      "failed": 0
+    },
+    "tests": {
+      "total": 5,
+      "pending": 0,
+      "failed": 0
+    },
+    "assertions": {
+      "total": 18,
+      "pending": 0,
+      "failed": 0
+    },
+    "testScripts": {
+      "total": 5,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequestScripts": {
+      "total": 0,
+      "pending": 0,
+      "failed": 0
+    }
+  },
+  "failures": [],
+  "executions": [
+    {
+      "name": "List Games",
+      "status": 200,
+      "assertions": [
+        {
+          "assertion": "Status 200",
+          "passed": true
+        },
+        {
+          "assertion": "JSON response",
+          "passed": true
+        },
+        {
+          "assertion": "Contract fields and types",
+          "passed": true
+        },
+        {
+          "assertion": "List array",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "Show Game",
+      "status": 200,
+      "assertions": [
+        {
+          "assertion": "Status 200",
+          "passed": true
+        },
+        {
+          "assertion": "JSON response",
+          "passed": true
+        },
+        {
+          "assertion": "Contract fields and types",
+          "passed": true
+        },
+        {
+          "assertion": "Detail object",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "Game Not Found",
+      "status": 404,
+      "assertions": [
+        {
+          "assertion": "Status 404",
+          "passed": true
+        },
+        {
+          "assertion": "JSON response",
+          "passed": true
+        },
+        {
+          "assertion": "Error contract",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "Filter PC",
+      "status": 200,
+      "assertions": [
+        {
+          "assertion": "Status 200",
+          "passed": true
+        },
+        {
+          "assertion": "JSON response",
+          "passed": true
+        },
+        {
+          "assertion": "Contract fields and types",
+          "passed": true
+        },
+        {
+          "assertion": "PC only",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "Invalid Platform",
+      "status": 422,
+      "assertions": [
+        {
+          "assertion": "Status 422",
+          "passed": true
+        },
+        {
+          "assertion": "JSON response",
+          "passed": true
+        },
+        {
+          "assertion": "Error contract",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "tested_at": "2026-10-09T08:23:35.445Z",
+  "target": "Laravel 13 + SQLite development; fixture data",
+  "results": [
+    {
+      "name": "List Games",
+      "method": "GET",
+      "path": "/api/games",
+      "status": 200,
+      "body": {
+        "data": [
+          {
+            "id": 1,
+            "title": "Game Contoh PC",
+            "platform": "pc",
+            "is_free": true,
+            "source": "fixture",
+            "updated_at": "2026-10-09T08:22:09.000000Z"
+          },
+          {
+            "id": 2,
+            "title": "Game Contoh Browser",
+            "platform": "browser",
+            "is_free": true,
+            "source": "fixture",
+            "updated_at": "2026-10-09T08:22:09.000000Z"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Show Game",
+      "method": "GET",
+      "path": "/api/games/1",
+      "status": 200,
+      "body": {
+        "data": {
+          "id": 1,
+          "title": "Game Contoh PC",
+          "platform": "pc",
+          "is_free": true,
+          "source": "fixture",
+          "updated_at": "2026-10-09T08:22:09.000000Z"
+        }
+      }
+    },
+    {
+      "name": "Game Not Found",
+      "method": "GET",
+      "path": "/api/games/999999",
+      "status": 404,
+      "body": {
+        "message": "Resource not found",
+        "errors": null
+      }
+    },
+    {
+      "name": "Filter PC",
+      "method": "GET",
+      "path": "/api/games?platform=pc",
+      "status": 200,
+      "body": {
+        "data": [
+          {
+            "id": 1,
+            "title": "Game Contoh PC",
+            "platform": "pc",
+            "is_free": true,
+            "source": "fixture",
+            "updated_at": "2026-10-09T08:22:09.000000Z"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Invalid Platform",
+      "method": "GET",
+      "path": "/api/games?platform=console",
+      "status": 422,
+      "body": {
+        "message": "The given data was invalid.",
+        "errors": {
+          "platform": [
+            "Gunakan platform pc atau browser; hanya parameter platform yang didukung."
+          ]
+        }
+      }
+    }
+  ]
+}
